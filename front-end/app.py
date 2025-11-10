@@ -61,10 +61,12 @@ def load_model(model_path):
 def preprocess_image(image, target_size=64):
     """Preprocess image for model prediction."""
     # Convert to grayscale if needed
-    if image.dtype != np.uint8:
-        image = (image * 255).astype(np.uint8) if image.max() <= 1.0 else image.astype(np.uint8)
+    if len(image.shape) == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    
     # Resize
-    image = cv2.resize(image, (target_size, target_size), interpolation=cv2.INTER_AREA)    
+    image = cv2.resize(image, (target_size, target_size))
+    
     # Normalize
     image = image.astype('float32') / 255.0
     
@@ -177,33 +179,20 @@ def main():
             if canvas_result.image_data is not None:
                 # Convert canvas to image
                 img = canvas_result.image_data.astype(np.uint8)
-                img = canvas_result.image_data
-                alpha = img[:, :, 3]  # Use alpha channel as mask
-                gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
                 
-                # Use alpha to create clean digit (white on black)
-                # Only keep drawn parts (where alpha > 0), set background to 0
-                mask = alpha > 30  # Avoid fully transparent
+                # Invert colors (canvas is black on white, we need white on black)
+                # img = 255 - img
+
+                # alpha_channel = img[:, :, 3]
+                img = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
+
+                # ivertign image white 255 and background is black 0 same as in the  trininng dataset
+
+ 
+                img = cv2.bitwise_not(img)
+                _, img = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
                 
-                digit = np.zeros_like(gray)
-                digit[mask] = 255 - gray[mask]  # black stroke → white digit
-            
-                # Slight blur for anti-aliasing
-                digit = cv2.GaussianBlur(digit, (5, 5), 0)
-            
-                # Center the digit
-                coords = cv2.findNonZero(mask.astype(np.uint8))
-                if coords is not None:
-                    x, y, w, h = cv2.boundingRect(coords)
-                    size = max(w, h, 20)  # min size
-                    canvas = np.zeros((size, size), dtype=np.uint8)
-                    ox, oy = (size - w) // 2, (size - h) // 2
-                    canvas[oy:oy+h, ox:ox+w] = digit[y:y+h, x:x+w]
-            
-                    # Resize to model size
-                    input_image = cv2.resize(canvas, (img_size, img_size), interpolation=cv2.INTER_AREA)
-                else:
-                    input_image = np.zeros((img_size, img_size), dtype=np.uint8)
+                input_image = img
         
         else:  # Upload Image
             uploaded_file = st.file_uploader(
