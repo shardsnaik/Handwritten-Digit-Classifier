@@ -1,0 +1,17 @@
+image_path,predicted_digit,confidence
+Eight_full (10).jpg,8,0.999985
+Eight_full (11).jpg,8,0.9999894
+Eight_full (12).jpg,8,0.9999943
+Eight_full (13).jpg,8,0.9999949
+Eight_full (14).jpg,8,0.99995613
+Eight_full (7).jpg,8,0.99998164
+Eight_full (8).jpg,8,0.99998534
+Eight_full (9).jpg,8,0.99999845
+Four_full (10).jpg,4,0.9999814
+Four_full (11).jpg,4,0.99999845
+Four_full (12).jpg,4,0.99975055
+Four_full (13).jpg,4,0.9973164
+Four_full (7).jpg,4,0.99994326
+Four_full (8).jpg,4,0.99991524
+Four_full (9).jpg,4,0.9999627
+Six_full (2104).jpg,6,0.99973744
