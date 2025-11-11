@@ -1,6 +1,12 @@
 # Digit Classification Project
 
+
 A complete digit classification system (0-9) with two baseline models: HOG + Logistic Regression and CNNs.
+
+### The deployed front-end using `streamlit`
+
+
+## https://handwritten-digit-classifier-bcaesvazfgrmghljhbpess.streamlit.app/
 
 ## Project Structure
 
